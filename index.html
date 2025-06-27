@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>World Map by Arjun Yadav</title>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- Custom Styling -->
+  <style>
+    /* Background with stars */
+    body {
+      margin: 0;
+      font-family: 'Orbitron', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(ellipse at bottom, #0d1b2a 0%, #000000 100%);
+      color: #00ffff;
+      overflow-x: hidden;
+      animation: fadeInBody 2s ease;
+    }
+
+    /* Star background using pseudo element */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('https://i.ibb.co/S7qKczT/stars-bg.gif');
+      background-size: cover;
+      background-repeat: no-repeat;
+      z-index: -1;
+      opacity: 0.2;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin: 30px 0 10px;
+      text-shadow: 0 0 10px #00ffff;
+      animation: slideDown 1.5s ease;
+    }
+
+    h2 {
+      font-size: 2em;
+      margin-bottom: 20px;
+      animation: fadeInText 2s ease 1s forwards;
+      opacity: 0;
+      color: #80ffec;
+      text-shadow: 0 0 5px #80ffec;
+    }
+
+    #map {
+      height: 80vh;
+      width: 90vw;
+      margin: auto;
+      border: 3px solid #00ffff;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+      animation: mapZoomIn 1s ease-in-out 2s forwards;
+      opacity: 0;
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    #map:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+    }
+
+    /* Animations */
+    @keyframes slideDown {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInText {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes mapZoomIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInBody {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Popup custom style */
+    .leaflet-popup-content {
+      font-family: 'Courier New', monospace;
+      color: #ffffff;
+    }
+    .leaflet-popup-content-wrapper {
+      background: #001f3f;
+      border: 1px solid #00ffff;
+      box-shadow: 0 0 10px #00ffff;
+    }
+
+  </style>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Leaflet GeoNames Plugin -->
+  <script src="https://unpkg.com/leaflet-geonames@2.1.0/dist/leaflet-geonames.min.js"></script>
+</head>
+<body>
+
+  <h1>World Map by Arjun Yadav</h1>
+  <h2>Explore the Universe of Earth</h2>
+  <div id="map"></div>
+
+  <script>
+    // Initialize map
+    const map = L.map('map').setView([20, 0], 2);
+
+    // Add OpenStreetMap tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // GeoNames layer
+    L.control.geonames({
+      username: 'demo',
+      position: 'topright',
+      lang: 'en',
+      zoomLevel: 5,
+      maxresults: 5
+    }).addTo(map);
+
+    // Hover popup with lat/lng
+    let popup = L.popup({ closeButton: false });
+
+    map.on('mousemove', function (e) {
+      popup
+        .setLatLng(e.latlng)
+        .setContent(`<b>Latitude:</b> ${e.latlng.lat.toFixed(2)}<br><b>Longitude:</b> ${e.latlng.lng.toFixed(2)}`)
+        .openOn(map);
+    });
+  </script>
+</body>
+</html>
